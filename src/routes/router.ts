@@ -1,16 +1,14 @@
 import { Request, Response, Router } from 'express';
 import { authenticateToken } from '../middlewares/authMiddleware';
 import { checkForAliases, createNewShortUrl, getUserDetails } from '../utils/dbHelper';
+import { generateUniqueId } from '../utils/misc';
 
 const router = Router();
 
-router.get('/example', authenticateToken, (req, res) => {
-  res.send('Example endpoint');
-});
 router.post('/shorten', authenticateToken, async (req: any, res: any) => {
   try {
-    const { url, customAlias, topic } = req.body;
-    const shortUrl = customAlias ? customAlias : "12344";
+    const { url, customAlias, topic="General" } = req.body;
+    const shortUrl = customAlias ? customAlias : generateUniqueId();
     if (await checkForAliases(shortUrl)) {
       return res.status(400).json({ error: 'Alias is already in use.' });
     }
