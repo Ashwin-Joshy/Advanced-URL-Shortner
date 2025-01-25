@@ -108,5 +108,35 @@ const authDefinitions = {
           },
         },
       },
+    '/auth/google': {
+    get: {
+      summary: 'Google Authentication',
+      description: 'Redirects to Google for authentication.',
+      security: [
+        {
+          googleOAuth: [],
+        },
+      ],
+      responses: {
+        302: {
+          description: 'Redirects to Google for authentication',
+        },
+      },
+    },
+  },
+  '/auth/google/callback': {
+    get: {
+      summary: 'Google Authentication Callback',
+      description: 'Handles the callback from Google after authentication.',
+      responses: {
+        302: {
+          description: 'Redirects to profile after successful authentication',
+        },
+        401: {
+          description: 'Unauthorized if authentication fails',
+        },
+      },
+    },
+  },
   };
   export default authDefinitions;
