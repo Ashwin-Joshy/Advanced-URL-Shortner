@@ -15,8 +15,8 @@ router.post('/shorten', authenticateToken, async (req: any, res: any) => {
     if (await checkForAliases(shortUrl)) {
       return res.status(400).json({ error: 'Alias is already in use.' });
     }
-    const emailId = req.user?.id;
-    const user = await getUserDetails(emailId)
+    const userId = req.user?.id;
+    const user = await getUserDetails(userId)
     const createdAt = new Date();
     await createNewShortUrl(shortUrl, url, topic, createdAt, user);
     const URL_PREFIX = process.env.URL_PREFIX
@@ -42,9 +42,10 @@ router.get('/shorten/:url',useragent.express(), async (req, res) => {
     const userAgent = req.headers['user-agent'] || "";
     // const parser = new UAParser();
     // const deviceDetails = parser.setUA(userAgent).getResult();
-    console.log("Details", "IP", ipAddress, "details", os, "geolocation", geoLocationData,"devicetype",deviceType);
-    await addLog(ipAddress, shortUrl, os, country,deviceType)
-    return res.status(301).redirect(url);
+    console.log('URL',url.url,"topic",url.topic);
+    
+    if(url.url) await addLog(ipAddress, shortUrl, os, country,deviceType,url.topic)
+    return res.status(302).redirect(url.url);
   }
   catch (error: any) {
     res.status(500).json({ error: error.message, isSuccess: false });

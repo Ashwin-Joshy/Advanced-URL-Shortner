@@ -35,7 +35,7 @@ authRoute.post('/signup', async (req: Request, res: Response) => {
     const { username, password, email } = req.body;
     try {
         const userRepository = AppDataSource.getRepository(User);
-        let user = await userRepository.findOneBy({ email });
+        let user = await userRepository.findOneBy({ email });                                
         if (user) {
             res.status(400).json({ message: 'User already exists.' }).end();
         }

@@ -8,6 +8,9 @@ export class Logs {
   @Column()
   alias: string;
 
+  @Column({ nullable: true })
+  topic: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date;
 
@@ -16,7 +19,7 @@ export class Logs {
 
   @Column()
   deviceName: string;
-  
+
   @Column({ nullable: true })
   deviceType: string;
 

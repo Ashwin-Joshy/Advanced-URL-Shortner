@@ -21,21 +21,19 @@ const createNewShortUrl = async (alias: string, url: string, topic: string, crea
   console.log("New entry URL", newUrl);
 
 }
-const getUserDetails = async (emailId: string) => {
+const getUserDetails = async (userId: string) => {
   const userRepo = await getRepo(User);
-  const user = await userRepo.findOneBy({ email: emailId });
+  const user = await userRepo.findOneBy({ id: userId });
   if (!user) return Promise.reject("User not found");
   return user;
 }
 const findUrl = async (alias: string) => {
-  console.log("Alias to get", alias);
-
   const urlRpo = await getRepo(Url);
   const url = await urlRpo.findOne({ where: { alias } });
   if (!url) return Promise.reject("Url not found");
-  return url.url;
+  return url;
 }
-const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType:string) => {
+const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType: string, topic:string) => {
   const urlRpo = await getRepo(Logs);
   const newLog = new Logs();
   newLog.alias = shortUrl;
@@ -43,11 +41,12 @@ const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: a
   newLog.deviceName = deviceName;
   newLog.geoLocation = country;
   newLog.deviceType = deviceType;
+  newLog.topic = topic;
   newLog.timestamp = new Date();
   urlRpo.save(newLog);
 }
-const getAliasLogData=async (alias:string)=>{
+const getLogData = async (searchValue: string, key: string) => {
   const urlRpo = await getRepo(Logs);
-  return urlRpo.find({ where: { alias } });
+  return urlRpo.find({ where: { [key]: searchValue } });
 }
-export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getAliasLogData }
+export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData }
