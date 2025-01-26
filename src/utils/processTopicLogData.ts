@@ -1,11 +1,9 @@
+import { getClicksByDate } from "./misc";
+
 export function processTopicLogData(data: any) {
     const totalClicks = data.length
     const uniqueUsers = new Set(data.map((entry: any) => entry.ipAddress)).size;
-    const clicksByDate = data.reduce((acc: any, entry: any) => {
-        const date = new Date(entry.timestamp).toLocaleDateString();
-        acc[date] = (acc[date] || 0) + 1;
-        return acc;
-    }, {});
+    const clicksByDate = getClicksByDate(data)
     const urls = processData(data)
     return {
         totalClicks,

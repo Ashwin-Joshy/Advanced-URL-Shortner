@@ -3,12 +3,12 @@ import { authenticateToken } from '../middlewares/authMiddleware';
 import { addLog, checkForAliases, createNewShortUrl, findUrl, getUserDetails } from '../utils/dbHelper';
 import { generateUniqueId, getDeviceType } from '../utils/misc';
 import { getGeolocation } from '../utils/getGeoLocation';
-import { UAParser } from 'ua-parser-js';
 import useragent from "express-useragent";
+import { rateLimiter } from '../middlewares/rateLimiter';
 
 const router = Router();
 
-router.post('/shorten', authenticateToken, async (req: any, res: any) => {
+router.post('/shorten', rateLimiter, authenticateToken, async (req: any, res: any) => {
   try {
     const { url, customAlias, topic = "General" } = req.body;
     const shortUrl = customAlias ? customAlias : generateUniqueId();
@@ -30,7 +30,7 @@ router.post('/shorten', authenticateToken, async (req: any, res: any) => {
     res.status(500).json({ error: error.message, isSuccess: false });
   }
 })
-router.get('/shorten/:url',useragent.express(), async (req, res) => {
+router.get('/shorten/:url', useragent.express(), async (req, res) => {
   try {
     const shortUrl = req.params.url;
     const deviceType = getDeviceType(req.useragent?.source || "")
@@ -42,9 +42,9 @@ router.get('/shorten/:url',useragent.express(), async (req, res) => {
     const userAgent = req.headers['user-agent'] || "";
     // const parser = new UAParser();
     // const deviceDetails = parser.setUA(userAgent).getResult();
-    console.log('URL',url.url,"topic",url.topic);
-    
-    if(url.url) await addLog(ipAddress, shortUrl, os, country,deviceType,url.topic)
+    console.log('URL', url.url, "topic", url.topic);
+
+    if (url.url) await addLog(ipAddress, shortUrl, os, country, deviceType, url.topic)
     return res.status(302).redirect(url.url);
   }
   catch (error: any) {

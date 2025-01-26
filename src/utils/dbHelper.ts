@@ -21,9 +21,12 @@ const createNewShortUrl = async (alias: string, url: string, topic: string, crea
   console.log("New entry URL", newUrl);
 
 }
-const getUserDetails = async (userId: string) => {
+const getUserDetails = async (userId: string, includeUrls: boolean = false) => {
   const userRepo = await getRepo(User);
-  const user = await userRepo.findOneBy({ id: userId });
+  const user = await userRepo.findOne({
+    where: { id: userId },
+    relations: includeUrls ? ['urls'] : [],
+  });
   if (!user) return Promise.reject("User not found");
   return user;
 }
@@ -33,7 +36,7 @@ const findUrl = async (alias: string) => {
   if (!url) return Promise.reject("Url not found");
   return url;
 }
-const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType: string, topic:string) => {
+const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType: string, topic: string) => {
   const urlRpo = await getRepo(Logs);
   const newLog = new Logs();
   newLog.alias = shortUrl;
@@ -49,4 +52,10 @@ const getLogData = async (searchValue: string, key: string) => {
   const urlRpo = await getRepo(Logs);
   return urlRpo.find({ where: { [key]: searchValue } });
 }
-export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData }
+const getAllLogData = async (aliasList: Array<string>) => {
+  const urlRpo = await getRepo(Logs);
+  return urlRpo.createQueryBuilder('log')
+    .where('log.alias IN (:...aliasList)', { aliasList }) 
+    .getMany();
+}
+export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData }
