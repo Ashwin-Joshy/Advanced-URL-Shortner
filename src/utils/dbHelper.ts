@@ -1,4 +1,5 @@
 import { AppDataSource, getRepo } from "../datasource";
+import { Logs } from "../entities/Logs";
 import { Url } from "../entities/Url";
 import { User } from "../entities/User";
 
@@ -26,4 +27,27 @@ const getUserDetails = async (emailId: string) => {
   if (!user) return Promise.reject("User not found");
   return user;
 }
-export { checkForAliases, createNewShortUrl, getUserDetails }
+const findUrl = async (alias: string) => {
+  console.log("Alias to get", alias);
+
+  const urlRpo = await getRepo(Url);
+  const url = await urlRpo.findOne({ where: { alias } });
+  if (!url) return Promise.reject("Url not found");
+  return url.url;
+}
+const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType:string) => {
+  const urlRpo = await getRepo(Logs);
+  const newLog = new Logs();
+  newLog.alias = shortUrl;
+  newLog.ipAddress = ipAddress;
+  newLog.deviceName = deviceName;
+  newLog.geoLocation = country;
+  newLog.deviceType = deviceType;
+  newLog.timestamp = new Date();
+  urlRpo.save(newLog);
+}
+const getAliasLogData=async (alias:string)=>{
+  const urlRpo = await getRepo(Logs);
+  return urlRpo.find({ where: { alias } });
+}
+export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getAliasLogData }

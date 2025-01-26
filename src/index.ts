@@ -1,7 +1,7 @@
 import express from "express";
 import setupSwagger from "./swagger/swagger";
 import cors from 'cors';
-import router from "./routes/router";
+import router from "./routes/mainRouter";
 import authRoute from "./routes/authRouter";
 import * as dotenv from "dotenv";
 import { AppDataSource } from "./datasource";
@@ -9,6 +9,7 @@ import session from 'express-session';
 import passport from "passport";
 import { initializePassport } from "./passport.setup";
 import { authenticateToken } from "./middlewares/authMiddleware";
+import analyticsRouter from "./routes/analyticsRouter";
 
 dotenv.config()
 const app = express();
@@ -18,7 +19,7 @@ const corsOptions = {
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
   credentials: true, 
 };
-
+app.set('trust proxy', true)
 app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',
@@ -43,6 +44,7 @@ AppDataSource.initialize().then(() => {
 setupSwagger(app);
 
 app.use("/api/auth", authRoute)
+app.use("/api/analytics", analyticsRouter)
 app.use("/api", router)
 
 app.listen(port, () => {

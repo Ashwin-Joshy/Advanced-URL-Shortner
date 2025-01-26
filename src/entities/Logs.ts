@@ -16,6 +16,9 @@ export class Logs {
 
   @Column()
   deviceName: string;
+  
+  @Column({ nullable: true })
+  deviceType: string;
 
   @Column({ nullable: true })
   geoLocation: string;
