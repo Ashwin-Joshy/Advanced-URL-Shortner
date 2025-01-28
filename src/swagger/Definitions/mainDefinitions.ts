@@ -129,7 +129,7 @@ const mainDefinitions = {
 '/shorten/{url}': {
   get: {
     summary: 'Get Original URL',
-      description: 'Redirects to the original URL based on the provided shortened URL ',
+      description: 'Redirects to the original URL based on the provided shortened URL \n\n **Important:**You must visit this URL in your browser to get redirected to Original URL',
       tags: ['Main'],  
       operationId: 'getShortenUrl',
           parameters: [

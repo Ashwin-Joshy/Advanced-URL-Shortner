@@ -29,19 +29,19 @@ const swaggerOptions: SwaggerOptions = {
           scheme: 'bearer',
           bearerFormat: 'JWT', 
         },
-        googleOAuth: {
-          type: 'oauth2',
-          flows: {
-            authorizationCode: {
-              authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-              tokenUrl: 'https://oauth2.googleapis.com/token',
-              scopes: {
-                'https://www.googleapis.com/auth/userinfo.email': 'Access email address',
-                'https://www.googleapis.com/auth/userinfo.profile': 'Access basic profile info',
-              },
-            },
-          },
-        },
+        // googleOAuth: {
+        //   type: 'oauth2',
+        //   flows: {
+        //     authorizationCode: {
+        //       authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+        //       tokenUrl: 'https://oauth2.googleapis.com/token',
+        //       scopes: {
+        //         'https://www.googleapis.com/auth/userinfo.email': 'Access email address',
+        //         'https://www.googleapis.com/auth/userinfo.profile': 'Access basic profile info',
+        //       },
+        //     },
+        //   },
+        // },
       },
     },
     security: [

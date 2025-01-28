@@ -1,8 +1,8 @@
 const authDefinitions = {
   '/auth/google': {
     get: {
-      summary: 'Google Authentication',
-      description: 'Redirects to Google for authentication.',
+      summary: 'Google Authentication (Login & SignUp)',
+      description: 'Redirects to Google for authentication. \n\n**Important:** You must visit this URL in your browser to obtain the token.\n\n Once token is obtained please paste the token as value of Bearer Auth after clicking Authorize button on top right \n\n **Make sure that you remove the quotes("") which token is contained**',
       tags: ['Authentication'], 
       security: [
         {
@@ -15,9 +15,10 @@ const authDefinitions = {
         },
       },
     },
-    '/auth/login': {
+  },
+  '/auth/login': {
       post: {
-        summary: 'User login',
+        summary: 'User login(Email & Password)',
         description: 'Endpoint for user authentication and login.',
         tags: ['Authentication'], 
         requestBody: {
@@ -70,7 +71,7 @@ const authDefinitions = {
     },
     '/auth/signup': {
         post: {
-          summary: 'User signup',
+          summary: 'User signup(Email & Password)',
           description: 'Endpoint for new user registration.',
           tags: ['Authentication'], 
           requestBody: {
@@ -126,21 +127,6 @@ const authDefinitions = {
           },
         },
       },
-  },
-  '/auth/google/callback': {
-    get: {
-      summary: 'Google Authentication Callback',
-      description: 'Handles the callback from Google after authentication.',
-      tags: ['Authentication'], 
-      responses: {
-        302: {
-          description: 'Redirects to profile after successful authentication',
-        },
-        401: {
-          description: 'Unauthorized if authentication fails',
-        },
-      },
-    },
-  },
+ 
   };
   export default authDefinitions;
