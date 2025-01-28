@@ -8,7 +8,6 @@ import { AppDataSource } from "./datasource";
 import session from 'express-session';
 import passport from "passport";
 import { initializePassport } from "./passport.setup";
-import { authenticateToken } from "./middlewares/authMiddleware";
 import analyticsRouter from "./routes/analyticsRouter";
 
 dotenv.config()
@@ -17,9 +16,8 @@ const port = 3000;
 const corsOptions = {
   origin: '*', 
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', 
-  credentials: true, 
 };
-app.set('trust proxy', true)
+// app.set('trust proxy', true)
 app.use(express.json());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secret',

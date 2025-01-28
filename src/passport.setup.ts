@@ -11,8 +11,6 @@ export const initializePassport = () => {
     }, async (accessToken, refreshToken, profile, done) => {
         const userRepository = AppDataSource.getRepository(User);
         let user = await userRepository.findOne({ where: { googleId: profile.id } });
-        console.log("profile",profile);
-        
         if (!user) {
             user = userRepository.create({
                 name: profile.displayName,

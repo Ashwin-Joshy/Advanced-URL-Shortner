@@ -4,7 +4,7 @@ export function generateUniqueId(): string {
   return randomBytes(3).toString('hex').slice(0, 5);
 }
 export function getDeviceType(source: string) {
-  if (/mobile/i.test(source)) {
+  if (/mobile|iPhone|Android/i.test(source)) {
     return "Mobile";
   } else if (/tablet|ipad|playbook|silk/i.test(source)) {
     return "Tablet";
@@ -13,7 +13,7 @@ export function getDeviceType(source: string) {
   }
 }
 export function getClicksByDate(data: any) {
-  data.reduce((acc: any, entry: any) => {
+  return data.reduce((acc: any, entry: any) => {
     const date = new Date(entry.timestamp).toLocaleDateString();
     acc[date] = (acc[date] || 0) + 1;
     return acc;

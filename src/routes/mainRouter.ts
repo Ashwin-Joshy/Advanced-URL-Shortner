@@ -11,44 +11,52 @@ const router = Router();
 router.post('/shorten', rateLimiter, authenticateToken, async (req: any, res: any) => {
   try {
     const { url, customAlias, topic = "General" } = req.body;
-    const shortUrl = customAlias ? customAlias : generateUniqueId();
-    if (await checkForAliases(shortUrl)) {
-      return res.status(400).json({ error: 'Alias is already in use.' });
-    }
+    const shortUrl = customAlias || generateUniqueId();
+
+    if (!url) return res.status(400).json({ isSuccess: false, error: 'URL is required.' });
+    if (await checkForAliases(shortUrl)) return res.status(400).json({ isSuccess: false, error: 'Alias is already in use.' });
+
     const userId = req.user?.id;
     const user = await getUserDetails(userId)
     const createdAt = new Date();
+
     await createNewShortUrl(shortUrl, url, topic, createdAt, user);
-    const URL_PREFIX = process.env.URL_PREFIX
+
+    const URL_PREFIX = process.env.URL_PREFIX || ""
     const response = {
       shortUrl: URL_PREFIX + shortUrl,
       createdAt
     };
+
     res.status(201).json(response);
   }
   catch (error: any) {
-    res.status(500).json({ error: error.message, isSuccess: false });
+    console.log("error", error);
+    res.status(500).json({ error: error.message || error, isSuccess: false });
   }
 })
-router.get('/shorten/:url', useragent.express(), async (req, res) => {
+router.get('/shorten/:url', useragent.express(), async (req: any, res: any) => {
   try {
     const shortUrl = req.params.url;
+
+    if (!shortUrl) return res.status(400).json({ isSuccess: false, error: 'shortUrl is required.' });
+
     const deviceType = getDeviceType(req.useragent?.source || "")
-    const os = req.useragent?.os
+    const os = req.useragent?.os || "Unknown"
     const url = await findUrl(shortUrl)
+
+    if (!url?.url) return res.status(400).json({ isSuccess: false, error: 'shortUrl is invalid.' })
+
     const ipAddress: any = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || "";
     const geoLocationData = await getGeolocation(ipAddress)
     const country = geoLocationData.status == true ? geoLocationData.country : "NA";
-    const userAgent = req.headers['user-agent'] || "";
-    // const parser = new UAParser();
-    // const deviceDetails = parser.setUA(userAgent).getResult();
-    console.log('URL', url.url, "topic", url.topic);
 
-    if (url.url) await addLog(ipAddress, shortUrl, os, country, deviceType, url.topic)
-    return res.status(302).redirect(url.url);
+    await addLog(ipAddress, shortUrl, os, country, deviceType, url.topic)
+    return res.status(301).redirect(url.url);
   }
   catch (error: any) {
-    res.status(500).json({ error: error.message, isSuccess: false });
+    console.log("error", error);
+    res.status(error.status || 500).json({ error: error.message || error, isSuccess: false });
   }
 })
 export default router;

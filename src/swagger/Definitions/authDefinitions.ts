@@ -1,8 +1,25 @@
 const authDefinitions = {
+  '/auth/google': {
+    get: {
+      summary: 'Google Authentication',
+      description: 'Redirects to Google for authentication.',
+      tags: ['Authentication'], 
+      security: [
+        {
+          googleOAuth: [],
+        },
+      ],
+      responses: {
+        302: {
+          description: 'Redirects to Google for authentication',
+        },
+      },
+    },
     '/auth/login': {
       post: {
         summary: 'User login',
         description: 'Endpoint for user authentication and login.',
+        tags: ['Authentication'], 
         requestBody: {
           required: true,
           content: {
@@ -55,6 +72,7 @@ const authDefinitions = {
         post: {
           summary: 'User signup',
           description: 'Endpoint for new user registration.',
+          tags: ['Authentication'], 
           requestBody: {
             required: true,
             content: {
@@ -108,26 +126,12 @@ const authDefinitions = {
           },
         },
       },
-    '/auth/google': {
-    get: {
-      summary: 'Google Authentication',
-      description: 'Redirects to Google for authentication.',
-      security: [
-        {
-          googleOAuth: [],
-        },
-      ],
-      responses: {
-        302: {
-          description: 'Redirects to Google for authentication',
-        },
-      },
-    },
   },
   '/auth/google/callback': {
     get: {
       summary: 'Google Authentication Callback',
       description: 'Handles the callback from Google after authentication.',
+      tags: ['Authentication'], 
       responses: {
         302: {
           description: 'Redirects to profile after successful authentication',

@@ -1,8 +1,25 @@
+import redisClient from "../clients/redisClient";
 import { AppDataSource, getRepo } from "../datasource";
 import { Logs } from "../entities/Logs";
 import { Url } from "../entities/Url";
 import { User } from "../entities/User";
+import * as dotenv from "dotenv";
 
+dotenv.config()
+
+const getUser = (email: string) => {
+  const userRepo = AppDataSource.getRepository(User);
+  return userRepo.findOne({ where: { email } });
+}
+const createUser = async (email: string, name: string, googleId: string, password: string) => {
+  const userRepo = AppDataSource.getRepository(User);
+  const newUser = new User();
+  newUser.email = email;
+  newUser.name = name;
+  newUser.googleId = googleId;
+  newUser.password = password;
+  await userRepo.save(newUser);
+}
 const checkForAliases = async (alias: string): Promise<boolean> => {
   const urlRpo = await getRepo(Url);
   const url = await urlRpo.findOne({ where: { alias } });
@@ -18,22 +35,32 @@ const createNewShortUrl = async (alias: string, url: string, topic: string, crea
   newUrl.createdDate = createdAt;
   newUrl.user = user;
   await urlRpo.save(newUrl);
-  console.log("New entry URL", newUrl);
-
 }
-const getUserDetails = async (userId: string, includeUrls: boolean = false) => {
+const getUserDetails = async (email: string, includeUrls: boolean = false) => {
   const userRepo = await getRepo(User);
   const user = await userRepo.findOne({
-    where: { id: userId },
+    where: { email },
     relations: includeUrls ? ['urls'] : [],
   });
-  if (!user) return Promise.reject("User not found");
+  if (!user) return Promise.reject(new Error("User not found"));
   return user;
 }
 const findUrl = async (alias: string) => {
+  const cachedUrl = await redisClient.get(`alias:${alias}`);
+  if (cachedUrl) {
+    console.log('Cache hit');
+    return JSON.parse(cachedUrl);
+  }
+  console.log('Cache miss');
   const urlRpo = await getRepo(Url);
   const url = await urlRpo.findOne({ where: { alias } });
-  if (!url) return Promise.reject("Url not found");
+  if (!url) return Promise.reject({status:404 ,message:"Url not found"});
+
+  const redisExpiry = parseInt(process.env.REDIS_EXPIRY || '84000')
+  await redisClient.set(`alias:${alias}`, JSON.stringify(url), {
+    EX: redisExpiry,
+  });
+
   return url;
 }
 const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: any, deviceType: string, topic: string) => {
@@ -52,10 +79,10 @@ const getLogData = async (searchValue: string, key: string) => {
   const urlRpo = await getRepo(Logs);
   return urlRpo.find({ where: { [key]: searchValue } });
 }
-const getAllLogData = async (aliasList: Array<string>) => {
+const getAllLogData = async (aliasList: Array<string> = [""]) => {
   const urlRpo = await getRepo(Logs);
   return urlRpo.createQueryBuilder('log')
-    .where('log.alias IN (:...aliasList)', { aliasList }) 
+    .where('log.alias IN (:...aliasList)', { aliasList })
     .getMany();
 }
-export { checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData }
+export { getUser, createUser, checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData }

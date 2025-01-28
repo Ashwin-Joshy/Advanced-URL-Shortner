@@ -1,16 +1,15 @@
 import { SwaggerOptions } from "swagger-ui-express";
 import mainDefinitions from "./Definitions/mainDefinitions";
-import authSwagger from "./Definitions/authDefinitions";
 import authDefinitions from "./Definitions/authDefinitions";
-import redirectSwagger from "./Definitions/redirectDefinitions";
+import analyticsDefinitions from "./Definitions/analyticsDefinitions";
 
 const swaggerOptions: SwaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Your API Title',
+      title: 'Advanced URL Shortener',
       version: '1.0.0',
-      description: 'API documentation for your application',
+      description: 'An advanced URL shortner that helps you shorten you urls and get analytics as you need',
     },
     servers: [
       {
@@ -21,10 +20,15 @@ const swaggerOptions: SwaggerOptions = {
     paths: {
       ...authDefinitions,
       ...mainDefinitions,
-      ...redirectSwagger
+      ...analyticsDefinitions,
     },
     components: {
       securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT', 
+        },
         googleOAuth: {
           type: 'oauth2',
           flows: {
@@ -41,6 +45,9 @@ const swaggerOptions: SwaggerOptions = {
       },
     },
     security: [
+      {
+        BearerAuth: [],
+      },
       {
         googleAuth: [],
       },
