@@ -1,5 +1,5 @@
 const analyticsDefinitions = {
-    '/{alias}': {
+    '/analytics/{alias}': {
     get: {
       summary: 'Get analytics data for a specific short URL alias',
       description: 'Retrieves log data for the specified short URL alias and processes it to return relevant analytics.',
@@ -147,7 +147,7 @@ const analyticsDefinitions = {
       },
     },
   },
-    '/topic/{topic}': {
+    '/analytics/topic/{topic}': {
         get: {
           summary: 'Get analytics data for a specific topic',
           description: 'Retrieves log data for the specified topic and processes it to return relevant analytics.',
@@ -272,7 +272,7 @@ const analyticsDefinitions = {
           },
         },
       },
-    '/overall': {
+    '/analytics/overall': {
       get: {
         summary: 'Get overall analytics for the user',
         description: 'Retrieves overall analytics data for the authenticated user, including the total number of URLs, OS types, Device Types.',

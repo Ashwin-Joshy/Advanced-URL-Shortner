@@ -6,7 +6,7 @@ import { User } from "../entities/User";
 import * as dotenv from "dotenv";
 
 dotenv.config()
-
+const redisExpiry = parseInt(process.env.REDIS_EXPIRY || '84000')
 const getUser = (email: string) => {
   const userRepo = AppDataSource.getRepository(User);
   return userRepo.findOne({ where: { email } });
@@ -56,7 +56,6 @@ const findUrl = async (alias: string) => {
   const url = await urlRpo.findOne({ where: { alias } });
   if (!url) return Promise.reject({status:404 ,message:"Url not found"});
 
-  const redisExpiry = parseInt(process.env.REDIS_EXPIRY || '84000')
   await redisClient.set(`alias:${alias}`, JSON.stringify(url), {
     EX: redisExpiry,
   });
@@ -76,8 +75,11 @@ const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: a
   urlRpo.save(newLog);
 }
 const getLogData = async (searchValue: string, key: string) => {
+  
   const urlRpo = await getRepo(Logs);
-  return urlRpo.find({ where: { [key]: searchValue } });
+  const logData= await urlRpo.find({ where: { [key]: searchValue } });
+ 
+  return logData;
 }
 const getAllLogData = async (aliasList: Array<string> = [""]) => {
   const urlRpo = await getRepo(Logs);
@@ -85,4 +87,5 @@ const getAllLogData = async (aliasList: Array<string> = [""]) => {
     .where('log.alias IN (:...aliasList)', { aliasList })
     .getMany();
 }
+
 export { getUser, createUser, checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData }

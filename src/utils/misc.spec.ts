@@ -32,7 +32,6 @@ describe('Utility Functions', () => {
         { timestamp: '2025-01-26T12:00:00Z' },
       ];
       const result = await getClicksByDate(data);
-      console.log("result",result);
       
       expect(result['25/1/2025']).toBe(2);
       expect(result['26/1/2025']).toBe(1);

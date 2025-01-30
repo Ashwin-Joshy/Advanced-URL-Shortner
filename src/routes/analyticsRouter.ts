@@ -22,7 +22,6 @@ analyticsRouter.get("/overall", rateLimiter, authenticateToken, async (req: any,
     }
     catch (error: any) {
         console.log("error", error);
-
         res.status(500).json({ error: error.message || error, isSuccess: false });
     }
 });
@@ -42,6 +41,7 @@ analyticsRouter.get("/:alias", rateLimiter, async (req, res) => {
     try {
         const alias = req.params.alias;
         const alisaLogData = await getLogData(alias, "alias")
+        
         const processedData = processAliasLogData(alisaLogData)
         res.status(200).json({ data: processedData });
     } catch (error: any) {

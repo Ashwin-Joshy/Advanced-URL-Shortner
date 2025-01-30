@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getGeolocation = async (ipAddress: string) => {
     try {
-        const response: any = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+        const response: any = await axios.get(`http://ip-api.com/json/${cleanIpAddress(ipAddress)}`);
         if (response.data?.status === "fail") {
             throw new Error("Error fetching geolocation");
         }
@@ -12,4 +12,7 @@ export const getGeolocation = async (ipAddress: string) => {
         console.error('Error fetching geolocation:', error);
         return { status: false, error }
     }
+}
+function cleanIpAddress(ip: string): string {
+    return ip.replace(/^::ffff:/, ''); 
 }

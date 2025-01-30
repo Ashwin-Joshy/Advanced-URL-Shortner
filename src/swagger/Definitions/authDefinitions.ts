@@ -28,10 +28,10 @@ const authDefinitions = {
               schema: {
                 type: 'object',
                 properties: {
-                  username: {
+                  email: {
                     type: 'string',
-                    description: 'The username of the user.',
-                    example: 'johndoe',
+                    description: 'The email of the user.',
+                    example: 'johndoe@example.com',
                   },
                   password: {
                     type: 'string',

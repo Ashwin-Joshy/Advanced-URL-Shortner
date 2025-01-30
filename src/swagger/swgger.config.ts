@@ -2,7 +2,9 @@ import { SwaggerOptions } from "swagger-ui-express";
 import mainDefinitions from "./Definitions/mainDefinitions";
 import authDefinitions from "./Definitions/authDefinitions";
 import analyticsDefinitions from "./Definitions/analyticsDefinitions";
-
+import * as dotenv from "dotenv";
+dotenv.config()
+const url = process.env.BASE_URL || 'http://localhost:3000/api'
 const swaggerOptions: SwaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -13,8 +15,8 @@ const swaggerOptions: SwaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:3000/api', 
-        description: 'Local server',
+        url: url, 
+        description: 'Current server',
       },
     ],
     paths: {
@@ -48,9 +50,9 @@ const swaggerOptions: SwaggerOptions = {
       {
         BearerAuth: [],
       },
-      {
-        googleAuth: [],
-      },
+      // {
+      //   googleAuth: [],
+      // },
     ],
   },
   apis: ['./src/routes/*.ts'], 

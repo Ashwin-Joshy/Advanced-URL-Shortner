@@ -6,25 +6,24 @@ import { Logs } from "./entities/Logs";
 
 dotenv.config();
 
-const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE, NODE_ENV } =
-    process.env;
+const { DB_URL, DB_SSL } = process.env;
 
 export const AppDataSource = new DataSource({
     type: "postgres",
-    host: DB_HOST,
-    port: parseInt(DB_PORT || "5432"),
-    username: DB_USERNAME,
-    password: DB_PASSWORD,
-    database: DB_DATABASE,
+    url: DB_URL,
+    ssl: {
+        rejectUnauthorized: false,
+        ca: DB_SSL,
+    },
 
     synchronize: true,
     logging: false,
-    entities: [User,Url,Logs],
+    entities: [User, Url, Logs],
     migrations: [],
     subscribers: [],
 });
 
-export async function getRepo(repo:any) {
+export async function getRepo(repo: any) {
     if (!AppDataSource.isInitialized) {
         await AppDataSource.initialize();
     }

@@ -126,18 +126,18 @@ const mainDefinitions = {
       },
     },
   },
-'/shorten/{url}': {
+'/shorten/{alias}': {
   get: {
     summary: 'Get Original URL',
-      description: 'Redirects to the original URL based on the provided shortened URL \n\n **Important:**You must visit this URL in your browser to get redirected to Original URL',
+      description: 'Redirects to the original URL based on the provided alias \n\n **Important:**You must visit this URL in your browser to get redirected to Original URL',
       tags: ['Main'],  
       operationId: 'getShortenUrl',
           parameters: [
             {
-              name: 'url',
+              name: 'alias',
               in: 'path',
               required: true,
-              description: 'The shortened URL to be expanded',
+              description: 'The alias to be expanded',
               schema: {
                 type: 'string',
               },
@@ -160,7 +160,7 @@ const mainDefinitions = {
                   },
                 error: {
                   type: 'string',
-                    example: 'shortUrl is required.',
+                    example: 'alias is required.',
                   },
               },
             },

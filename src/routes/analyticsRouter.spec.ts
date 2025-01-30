@@ -57,7 +57,6 @@ describe("Analytics Router", () => {
             const res = await request(app)
                 .get("/analytics/overall")
                 .set("Authorization", "Bearer token");
-            //console.log("req", res);
 
             expect(res.status).toBe(200);
             expect(res.body.data).toEqual({
@@ -77,7 +76,6 @@ describe("Analytics Router", () => {
             const res = await request(app)
                 .get("/analytics/overall")
                 .set("Authorization", "Bearer token");
-            console.log("RES",res.body);
             
             expect(res.status).toBe(500);
             expect(res.body.error).toBe("User not found");

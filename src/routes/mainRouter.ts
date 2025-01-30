@@ -22,9 +22,9 @@ router.post('/shorten', rateLimiter, authenticateToken, async (req: any, res: an
 
     await createNewShortUrl(shortUrl, url, topic, createdAt, user);
 
-    const URL_PREFIX = process.env.URL_PREFIX || ""
+    const URL_PREFIX = process.env.URL_PREFIX || "http://localhost/api/shorten/"
     const response = {
-      shortUrl: URL_PREFIX + shortUrl,
+      shortUrl: `${URL_PREFIX}${shortUrl}`,
       createdAt
     };
 
@@ -35,7 +35,7 @@ router.post('/shorten', rateLimiter, authenticateToken, async (req: any, res: an
     res.status(500).json({ error: error.message || error, isSuccess: false });
   }
 })
-router.get('/shorten/:url', useragent.express(), async (req: any, res: any) => {
+router.get('/shorten/:url', rateLimiter, useragent.express(), async (req: any, res: any) => {
   try {
     const shortUrl = req.params.url;
 
