@@ -1,7 +1,7 @@
 # Advanced URL Shortener API
 
 A scalable URL shortener service with analytics, built using Node.js, Postgres, Redis, and Docker.
-- URL: www.test.com
+- URL: https://www.ashjosh.work.gd/api-docs/#/
 ## Instructions to Run the Project
 
 ### Prerequisites
@@ -13,7 +13,7 @@ A scalable URL shortener service with analytics, built using Node.js, Postgres, 
 ### Setup
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/url-shortener.git
+git clone https://github.com/Ashwin-Joshy/Advanced-URL-Shortner.git
 cd url-shortener
 ```
 
@@ -55,7 +55,7 @@ BASE_URL=http://localhost/api  # Base API URL
 ```bash
 docker-compose up --build
 ```
-The API will be available at [http://localhost:3000](http://localhost:3000).
+The API will be available at [http://localhost](http://localhost).
 
 ### Running Tests
 ```bash
@@ -63,7 +63,7 @@ npm run test
 ```
 
 ### Accessing API Documentation
-Visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) after starting the server.
+Visit [http://localhost:3000/api-docs](http://localhost/api-docs) after starting the server.
 
 ## Features
 
@@ -120,7 +120,7 @@ Visit [http://localhost:3000/api-docs](http://localhost:3000/api-docs) after sta
 ## Deployment
 
 The service is deployed on AWS EC2:
-🔗 **[URL Shortener Live Demo](https://url-shortener-abc123.herokuapp.com)**
+🔗 **[URL Shortener Live Demo](https://www.ashjosh.work.gd/api-docs/#/)**
 
 ### Endpoints:
 - **API Docs:** `/api-docs`
