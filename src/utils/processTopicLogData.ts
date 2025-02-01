@@ -6,8 +6,9 @@ export function processTopicLogData(data: any, totalUrls: any) {
     const clicksByDate = getClicksByDate(data)
     const urls = processData(data)
     const urlList = totalUrls.map((urlData: any) => urlData.alias)
-    const temp=Object.keys(urls)
+    const temp=urls?.map((urlData: any) => urlData.shortUrl) || []
     const unUsedUrls = urlList.filter((url: any) => !temp.includes(url))
+    
     if(unUsedUrls.length) processUnusedUrls(unUsedUrls, urls);
     return {
         totalClicks,
