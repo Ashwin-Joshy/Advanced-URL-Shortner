@@ -1,7 +1,7 @@
 import request from "supertest";
 import express from "express";
 import analyticsRouter from "./analyticsRouter";
-import { getAllLogData, getLogData, getUserDetails } from "../utils/dbHelper";
+import { getAllLogData, getLogData, getTopicData, getUserDetails } from "../utils/dbHelper";
 
 import { authenticateToken } from "../middlewares/authMiddleware";
 import { processLogData } from "../utils/processLogData";
@@ -12,6 +12,7 @@ jest.mock("../utils/dbHelper", () => ({
     getAllLogData: jest.fn(),
     getLogData: jest.fn(),
     getUserDetails: jest.fn(),
+    getTopicData: jest.fn()
 }));
 jest.mock("../utils/processLogData");
 jest.mock("../utils/processAliasLogData");
@@ -88,6 +89,7 @@ describe("Analytics Router", () => {
             const mockProcessedData = { totalClicks: 50 };
 
             (getLogData as jest.Mock).mockResolvedValue(mockTopicLogData);
+            (getTopicData as jest.Mock).mockResolvedValue([]);
             (processTopicLogData as jest.Mock).mockImplementation(() => mockProcessedData);
 
             const res = await request(app).get("/analytics/topic/test-topic");
@@ -95,7 +97,7 @@ describe("Analytics Router", () => {
             expect(res.status).toBe(200);
             expect(res.body.data).toEqual(mockProcessedData);
             expect(getLogData).toHaveBeenCalledWith("test-topic", "topic");
-            expect(processTopicLogData).toHaveBeenCalledWith(mockTopicLogData);
+            expect(processTopicLogData).toHaveBeenCalledWith(mockTopicLogData,[]);
         });
 
         it("should return 500 if an error occurs", async () => {

@@ -11,7 +11,12 @@ const swaggerOptions: SwaggerOptions = {
     info: {
       title: 'Advanced URL Shortener',
       version: '1.0.0',
-      description: 'An advanced URL shortner that helps you shorten you urls and get analytics as you need',
+      description: `An advanced URL shortner that helps you shorten you urls and get analytics as you need 
+                    \n\n**Sample links:**
+                    \n\n**${url}/shorten/fb** - Loads facebook
+                    \n\n**${url}/analytics/fb** - Loads analytics of alias fb
+                    \n\n**${url}/analytics/topic/Social** - Loads analytics of topic Social
+                    `,
     },
     servers: [
       {

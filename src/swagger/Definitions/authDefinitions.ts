@@ -1,8 +1,11 @@
+import * as dotenv from "dotenv";
+dotenv.config()
+const url = process.env.BASE_URL 
 const authDefinitions = {
   '/auth/google': {
     get: {
       summary: 'Google Authentication (Login & SignUp)',
-      description: 'Redirects to Google for authentication. \n\n**Important:** You must visit this URL in your browser to obtain the token.\n\n Once token is obtained please paste the token as value of Bearer Auth after clicking Authorize button on top right \n\n **Make sure that you remove the quotes("") which token is contained**',
+      description: `Redirects to Google for authentication. \n\n**Important:** You must visit URL:${url}/auth/google in your browser to obtain the token.\n\n Once token is obtained please paste the token as value of Bearer Auth after clicking Authorize button on top right \n\n **Make sure that you remove the quotes("") which token is contained**`,
       tags: ['Authentication'], 
       security: [
         {

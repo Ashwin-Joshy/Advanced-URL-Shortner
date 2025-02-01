@@ -54,7 +54,7 @@ const findUrl = async (alias: string) => {
   console.log('Cache miss');
   const urlRpo = await getRepo(Url);
   const url = await urlRpo.findOne({ where: { alias } });
-  if (!url) return Promise.reject({status:404 ,message:"Url not found"});
+  if (!url) return Promise.reject({ status: 404, message: "Url not found" });
 
   await redisClient.set(`alias:${alias}`, JSON.stringify(url), {
     EX: redisExpiry,
@@ -75,10 +75,10 @@ const addLog = async (ipAddress: any, shortUrl: any, deviceName: any, country: a
   urlRpo.save(newLog);
 }
 const getLogData = async (searchValue: string, key: string) => {
-  
+
   const urlRpo = await getRepo(Logs);
-  const logData= await urlRpo.find({ where: { [key]: searchValue } });
- 
+  const logData = await urlRpo.find({ where: { [key]: searchValue } });
+
   return logData;
 }
 const getAllLogData = async (aliasList: Array<string> = [""]) => {
@@ -87,5 +87,9 @@ const getAllLogData = async (aliasList: Array<string> = [""]) => {
     .where('log.alias IN (:...aliasList)', { aliasList })
     .getMany();
 }
+const getTopicData = async (topic: string) => {
+  const urlRpo = await getRepo(Url);
+  return urlRpo.find({ where: { topic } });
+}
 
-export { getUser, createUser, checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData }
+export { getUser, createUser, checkForAliases, createNewShortUrl, getUserDetails, findUrl, addLog, getLogData, getAllLogData, getTopicData }

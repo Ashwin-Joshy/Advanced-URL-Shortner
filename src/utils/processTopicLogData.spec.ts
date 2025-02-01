@@ -12,7 +12,7 @@ describe('processTopicLogData', () => {
 
     const clicksByDateMock = { '25/1/2025': 4 };
 
-    const result = processTopicLogData(data);
+    const result = processTopicLogData(data,[]);
 
     expect(result.totalClicks).toBe(4);
     expect(result.uniqueUsers).toBe(3);

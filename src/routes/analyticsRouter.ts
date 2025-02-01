@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getAllLogData, getLogData, getUserDetails } from "../utils/dbHelper";
+import { getAllLogData, getLogData, getTopicData, getUserDetails } from "../utils/dbHelper";
 import { processAliasLogData } from "../utils/processAliasLogData";
 import { processTopicLogData } from "../utils/processTopicLogData";
 import { authenticateToken } from "../middlewares/authMiddleware";
@@ -29,8 +29,8 @@ analyticsRouter.get("/topic/:topic", rateLimiter, async (req, res) => {
     try {
         const topic = req.params.topic;
         const topicLogData = await getLogData(topic, "topic")
-        const processedData = processTopicLogData(topicLogData)
-
+        const topicList = await getTopicData(topic)
+        const processedData = processTopicLogData(topicLogData,topicList)
         res.status(200).json({ data: processedData });
     }
     catch (error: any) {
@@ -41,7 +41,6 @@ analyticsRouter.get("/:alias", rateLimiter, async (req, res) => {
     try {
         const alias = req.params.alias;
         const alisaLogData = await getLogData(alias, "alias")
-        
         const processedData = processAliasLogData(alisaLogData)
         res.status(200).json({ data: processedData });
     } catch (error: any) {
